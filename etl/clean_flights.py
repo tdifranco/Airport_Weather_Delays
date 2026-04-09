@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-INPUT_FILE = "data/raw/df722365-5f0b-4549-b2c5-cf3d083c3ef6.csv"
+INPUT_FILE = "data/raw/flight_data/df722365-5f0b-4549-b2c5-cf3d083c3ef6.csv"
 OUTPUT_FILE = "data/processed/cleaned_flights.csv"
 
 TARGET_AIRPORTS = ["DFW", "ATL", "MCO", "DEN", "LAX", "SEA", "LAS", "IAD", "MDW", "JFK"]

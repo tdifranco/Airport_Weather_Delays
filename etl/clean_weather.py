@@ -3,7 +3,7 @@ import numpy as np
 import glob
 import os
 
-INPUT_FOLDER = "data/raw"
+INPUT_FOLDER = "data/raw/airport_weather_data"
 OUTPUT_FILE = "data/processed/cleaned_weather.csv"
 
 AIRPORT_MAP = {

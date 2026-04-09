@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="overview" class="hero-card">
+    <div>
+        <p class="section-label">Current Scope</p>
+        <h2>{{ scope_label }}</h2>
+        <p class="hero-meta">Weather filter: <strong>{{ weather_label }}</strong></p>
+    </div>
+
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="airport">Airport</label>
+            <select id="airport" name="airport">
+                <option value="ALL" {% if selected_airport == "ALL" %}selected{% endif %}>All Airports</option>
+                {% for airport in airports %}
+                <option value="{{ airport }}" {% if selected_airport == airport %}selected{% endif %}>{{ airport }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="weather">Weather Condition</label>
+            <select id="weather" name="weather">
+                {% for key, value in weather_filters.items() %}
+                <option value="{{ key }}" {% if selected_weather == key %}selected{% endif %}>{{ value.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Apply Filters</button>
+    </form>
+</section>
+
+<section class="kpi-grid">
+    <article class="kpi-card">
+        <p class="kpi-label">Flights in View</p>
+        <h3>{{ "{:,.0f}".format(kpis.total_flights or 0) }}</h3>
+    </article>
+    <article class="kpi-card">
+        <p class="kpi-label">Average Delay</p>
+        <h3>{{ kpis.avg_delay or 0 }} min</h3>
+    </article>
+    <article class="kpi-card">
+        <p class="kpi-label">Cancellation Rate</p>
+        <h3>{{ kpis.cancel_rate or 0 }}%</h3>
+    </article>
+    <article class="kpi-card">
+        <p class="kpi-label">15+ Minute Delay Rate</p>
+        <h3>{{ kpis.delay15_rate or 0 }}%</h3>
+    </article>
+</section>
+
+<section class="summary-strip">
+    <div class="summary-panel">
+        <h3>Likely Delay Drivers</h3>
+        {% if top_causes %}
+            <div class="chip-row">
+                {% for row in top_causes %}
+                <div class="cause-chip">
+                    <span class="chip-title">{{ row.cause }}</span>
+                    <span class="chip-detail">{{ row.avg_delay or 0 }} min avg delay</span>
+                    <span class="chip-detail">{{ row.cancel_rate or 0 }}% cancelled</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">Not enough flagged weather flights in the current scope to identify top causes.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section id="trends" class="chart-grid two-col">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Daily Trend</p>
+                <h3>Average Delay by Day</h3>
+            </div>
+        </div>
+        <canvas id="delayTrendChart"></canvas>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Daily Trend</p>
+                <h3>Cancellation Rate by Day</h3>
+            </div>
+        </div>
+        <canvas id="cancelTrendChart"></canvas>
+    </article>
+</section>
+
+<section class="chart-grid two-col">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Airport Comparison</p>
+                <h3>Average Delay by Airport</h3>
+            </div>
+        </div>
+        <canvas id="airportDelayChart"></canvas>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Airport Comparison</p>
+                <h3>Cancellation Rate by Airport</h3>
+            </div>
+        </div>
+        <canvas id="airportCancelChart"></canvas>
+    </article>
+</section>
+
+<section id="drivers" class="chart-grid two-col">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Weather Impact</p>
+                <h3>Average Delay by Cause</h3>
+            </div>
+        </div>
+        <canvas id="causeDelayChart"></canvas>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Weather Impact</p>
+                <h3>Affected Flights by Cause</h3>
+            </div>
+        </div>
+        <canvas id="causeVolumeChart"></canvas>
+    </article>
+</section>
+
+<section class="table-grid">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Cause Breakdown</p>
+                <h3>Average Delay and Cancellation by Weather Cause</h3>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cause</th>
+                        <th>Affected Flights</th>
+                        <th>Avg Delay</th>
+                        <th>Cancel Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in cause_breakdown %}
+                    <tr>
+                        <td>{{ row.cause }}</td>
+                        <td>{{ "{:,.0f}".format(row.affected_flights or 0) }}</td>
+                        <td>{{ row.avg_delay or 0 }} min</td>
+                        <td>{{ row.cancel_rate or 0 }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+
+<section id="airport-table" class="table-grid">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <p class="section-label">Airport Detail</p>
+                <h3>Average Delay by Airport and Weather Type</h3>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Airport</th>
+                        <th>Flights</th>
+                        <th>Avg Delay</th>
+                        <th>Cancel Rate</th>
+                        <th>Rain Delay</th>
+                        <th>Snow Delay</th>
+                        <th>Wind Delay</th>
+                        <th>Fog / Low Vis Delay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in airport_weather_table %}
+                    <tr>
+                        <td>{{ row.ORIGIN }}</td>
+                        <td>{{ "{:,.0f}".format(row.flights or 0) }}</td>
+                        <td>{{ row.avg_delay or 0 }} min</td>
+                        <td>{{ row.cancel_rate or 0 }}%</td>
+                        <td>{{ row.rain_delay if row.rain_delay is not none else "—" }}</td>
+                        <td>{{ row.snow_delay if row.snow_delay is not none else "—" }}</td>
+                        <td>{{ row.wind_delay if row.wind_delay is not none else "—" }}</td>
+                        <td>{{ row.fog_delay if row.fog_delay is not none else "—" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+
+<script>
+    const trendDays = {{ trend_days | tojson }};
+    const trendAvgDelay = {{ trend_avg_delay | tojson }};
+    const trendCancelRate = {{ trend_cancel_rate | tojson }};
+
+    const airportLabels = {{ airport_labels | tojson }};
+    const airportAvgDelay = {{ airport_avg_delay | tojson }};
+    const airportCancelRate = {{ airport_cancel_rate | tojson }};
+
+    const causeLabels = {{ cause_labels | tojson }};
+    const causeAvgDelay = {{ cause_avg_delay | tojson }};
+    const causeFlights = {{ cause_flights | tojson }};
+
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false
+    };
+
+    new Chart(document.getElementById("delayTrendChart"), {
+        type: "line",
+        data: {
+            labels: trendDays,
+            datasets: [{
+                label: "Avg Delay (min)",
+                data: trendAvgDelay
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("cancelTrendChart"), {
+        type: "line",
+        data: {
+            labels: trendDays,
+            datasets: [{
+                label: "Cancellation Rate (%)",
+                data: trendCancelRate
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("airportDelayChart"), {
+        type: "bar",
+        data: {
+            labels: airportLabels,
+            datasets: [{
+                label: "Avg Delay (min)",
+                data: airportAvgDelay
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("airportCancelChart"), {
+        type: "bar",
+        data: {
+            labels: airportLabels,
+            datasets: [{
+                label: "Cancellation Rate (%)",
+                data: airportCancelRate
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("causeDelayChart"), {
+        type: "bar",
+        data: {
+            labels: causeLabels,
+            datasets: [{
+                label: "Avg Delay (min)",
+                data: causeAvgDelay
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("causeVolumeChart"), {
+        type: "doughnut",
+        data: {
+            labels: causeLabels,
+            datasets: [{
+                label: "Affected Flights",
+                data: causeFlights
+            }]
+        },
+        options: commonOptions
+    });
+</script>
+{% endblock %}

@@ -3,12 +3,11 @@ import pymysql
 
 DB_CONFIG = {
     "host": "localhost",
-    "user": "root",
-    "password": "YOUR_PASSWORD",
+    "user": "ia626app",
+    "password": "ia626app123",
     "database": "flight_weather",
     "cursorclass": pymysql.cursors.DictCursor,
 }
-
 
 def get_connection():
     return pymysql.connect(**DB_CONFIG)
@@ -35,6 +34,4 @@ def load_csv_to_table(csv_path, table_name):
 
 
 if __name__ == "__main__":
-    load_csv_to_table("data/processed/cleaned_flights.csv", "flights")
-    load_csv_to_table("data/processed/cleaned_weather.csv", "weather_hourly")
     load_csv_to_table("data/processed/merged_flights_weather.csv", "merged_data")
