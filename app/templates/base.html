@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Weather Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Flight Delay and Weather Analytics</h1>
+    <nav>
+        <a href="/">Home</a> |
+        <a href="/airport?code=ATL">Airport View</a> |
+        <a href="/weather">Weather View</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

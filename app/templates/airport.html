@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Airport Details: {{ airport_code }}</h2>
+<table border="1">
+    <tr>
+        <th>Origin</th>
+        <th>Precipitation</th>
+        <th>Visibility</th>
+        <th>Wind Speed</th>
+        <th>Delay</th>
+        <th>Cancelled</th>
+    </tr>
+    {% for row in rows %}
+    <tr>
+        <td>{{ row.origin }}</td>
+        <td>{{ row.precipitation }}</td>
+        <td>{{ row.visibility }}</td>
+        <td>{{ row.wind_speed }}</td>
+        <td>{{ row.dep_delay }}</td>
+        <td>{{ row.cancelled }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

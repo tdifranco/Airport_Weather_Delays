@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Weather Effects Summary</h2>
+<table border="1">
+    <tr>
+        <th>Rain</th>
+        <th>Snow</th>
+        <th>Fog</th>
+        <th>Average Delay</th>
+        <th>Cancellation Rate</th>
+    </tr>
+    {% for row in weather_stats %}
+    <tr>
+        <td>{{ row.rain_flag }}</td>
+        <td>{{ row.snow_flag }}</td>
+        <td>{{ row.fog_flag }}</td>
+        <td>{{ row.avg_delay }}</td>
+        <td>{{ row.cancel_rate }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

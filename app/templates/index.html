@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Airport Summary</h2>
+<table border="1">
+    <tr>
+        <th>Airport</th>
+        <th>Average Delay</th>
+        <th>Cancellation Rate</th>
+    </tr>
+    {% for row in airport_stats %}
+    <tr>
+        <td>{{ row.origin }}</td>
+        <td>{{ row.avg_delay }}</td>
+        <td>{{ row.cancel_rate }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
