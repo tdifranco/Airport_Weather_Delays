@@ -1,45 +1,45 @@
 # Screenshots
 
-Add screenshots of the dashboard here before final submission or job interview use.
+This page contains example dashboard views for the Airport Weather Delays project.
 
-## Suggested Screenshots
+## 1. Full Dashboard Overview
 
-### 1. Full Dashboard Overview
-Capture the landing page with:
+Shows the main dashboard with:
 - filter controls
 - KPI cards
 - trend charts
 - airport comparison charts
 
-### 2. Airport-Specific View
-Show the dashboard filtered to one airport, such as ATL or DFW.
+![Dashboard Overview](./HomeScreen.png)
 
-### 3. Weather-Specific View
-Show the dashboard filtered to a weather condition, such as rain or snow.
+---
 
-### 4. Cause Breakdown Table
-Capture the weather-cause summary table that compares average delay and cancellation rate.
+## 2. Airport-Specific View
 
-## Suggested Naming
-- `dashboard_overview.png`
-- `dashboard_airport_filter.png`
-- `dashboard_weather_filter.png`
-- `dashboard_cause_breakdown.png`
+Example of the dashboard filtered to one airport.
 
+![Dashboard Airport Filter](./AirportFilter.png)
 
-```md
-![Dashboard Overview](docs/HomeScreen.png)
-```
+---
 
-```md
-![Dashboard Airport Filter](docs/AirportFilter.png)
-```
-```md
-![Dashboard Weather Filter](docs/WeatherFilter.png)
-```
-```md
-![Dashboard Atlanta Rain](docs/ATLRain.png)
-```
-```md
-![Dashboard Cause Breakdown](docs/CauseBreakdown.png)
-```
+## 3. Weather-Specific View
+
+Example of the dashboard filtered to a weather condition.
+
+![Dashboard Weather Filter](./WeatherFilter.png)
+
+---
+
+## 4. Airport + Weather Example
+
+Example of a more specific filtered view.
+
+![Dashboard Atlanta Rain](./ATLRain.png)
+
+---
+
+## 5. Cause Breakdown Table
+
+Shows the weather-cause summary table comparing delay and cancellation rate.
+
+![Dashboard Cause Breakdown](./CauseBreakdown.png)
