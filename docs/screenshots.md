@@ -28,18 +28,18 @@ Capture the weather-cause summary table that compares average delay and cancella
 
 
 ```md
-![Dashboard Overview](docs/HomeScreen.png)
+![Dashboard Overview](./HomeScreen.png)
 ```
 
 ```md
-![Dashboard Airport Filter](docs/AirportFilter.png)
+![Dashboard Airport Filter](./AirportFilter.png)
 ```
 ```md
-![Dashboard Weather Filter](docs/WeatherFilter.png)
+![Dashboard Weather Filter](./WeatherFilter.png)
 ```
 ```md
-![Dashboard Atlanta Rain](docs/ATLRain.png)
+![Dashboard Atlanta Rain](./ATLRain.png)
 ```
 ```md
-![Dashboard Cause Breakdown](docs/CauseBreakdown.png)
+![Dashboard Cause Breakdown](./CauseBreakdown.png)
 ```

@@ -1,5 +1,8 @@
+Flask
 pandas
 numpy
-flask
-pymysql
+PyMySQL
+python-dotenv
+pytest
+cryptography
 matplotlib
