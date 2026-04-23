@@ -10,36 +10,35 @@ Shows the main dashboard with:
 - trend charts
 - airport comparison charts
 
+### 2. Airport-Specific View
+Show the dashboard filtered to one airport, such as ATL or DFW.
+
+### 3. Weather-Specific View
+Show the dashboard filtered to a weather condition, such as rain or snow.
+
+### 4. Cause Breakdown Table
+Capture the weather-cause summary table that compares average delay and cancellation rate.
+
+## Suggested Naming
+- `dashboard_overview.png`
+- `dashboard_airport_filter.png`
+- `dashboard_weather_filter.png`
+- `dashboard_cause_breakdown.png`
+
+
+```md
 ![Dashboard Overview](./HomeScreen.png)
+```
 
----
-
-## 2. Airport-Specific View
-
-Example of the dashboard filtered to one airport.
-
+```md
 ![Dashboard Airport Filter](./AirportFilter.png)
-
----
-
-## 3. Weather-Specific View
-
-Example of the dashboard filtered to a weather condition.
-
+```
+```md
 ![Dashboard Weather Filter](./WeatherFilter.png)
-
----
-
-## 4. Airport + Weather Example
-
-Example of a more specific filtered view.
-
+```
+```md
 ![Dashboard Atlanta Rain](./ATLRain.png)
-
----
-
-## 5. Cause Breakdown Table
-
-Shows the weather-cause summary table comparing delay and cancellation rate.
-
+```
+```md
 ![Dashboard Cause Breakdown](./CauseBreakdown.png)
+```
