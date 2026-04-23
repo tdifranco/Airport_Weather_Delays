@@ -1,8 +1,14 @@
 import os
+from pathlib import Path
+
 import pymysql
 from dotenv import load_dotenv
 
-load_dotenv(os.getenv("ENV_FILE", ".env.local"))
+BASE_DIR = Path(__file__).resolve().parent.parent
+env_file_name = os.getenv("ENV_FILE", ".env.local")
+env_path = BASE_DIR / env_file_name
+load_dotenv(env_path, override=True)
+
 
 def get_connection():
     return pymysql.connect(
