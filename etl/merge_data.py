@@ -1,11 +1,11 @@
 import pandas as pd
-
+"""Merge cleaned flight and weather datasets into one analysis-ready table."""
 FLIGHTS_FILE = "data/processed/cleaned_flights.csv"
 WEATHER_FILE = "data/processed/cleaned_weather.csv"
 OUTPUT_FILE = "data/processed/merged_flights_weather.csv"
 
-
-def main():
+"""Merge airport-hour weather data onto flights and create extra flags."""
+def main(): 
     flights = pd.read_csv(FLIGHTS_FILE)
     weather = pd.read_csv(WEATHER_FILE)
 

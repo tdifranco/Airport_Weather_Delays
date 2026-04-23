@@ -1,8 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for
-from db import get_connection
+"""Flask dashboard for exploring how weather relates to flight delays.
+
+This module is the presentation/controller layer of the project.
+It:
+1. Reads filter inputs from the user interface.
+2. Queries the MySQL merged_data table.
+3. Aggregates the results into KPIs, tables, and chart-ready series.
+4. Passes everything to Jinja templates for rendering.
+"""
+
+# Support both direct execution (python3 app/app.py)
+# and package-style execution/imports (python3 -m app.app, pytest).
+try:
+    from .db import get_connection
+except ImportError:
+    from db import get_connection
 
 app = Flask(__name__)
-
+# Centralized map of supported weather filters. Each entry includes:
+# - label: human-readable name for the UI
+# - sql: SQL fragment used in WHERE clauses
 WEATHER_FILTERS = {
     "all": {
         "label": "All Conditions",
@@ -41,7 +58,10 @@ WEATHER_FILTERS = {
     },
 }
 
+"""Safely coerce chart/table values to floats.
 
+    This helps when MySQL returns Decimal/None values and the data
+    needs to be serialized into JSON-friendly chart arrays."""
 def clean_num(value, default=0):
     if value is None:
         return default
@@ -50,7 +70,11 @@ def clean_num(value, default=0):
     except Exception:
         return default
 
+"""Build a parameterized WHERE clause for airport + weather filters.
 
+    Returns:
+        tuple[str, list]: SQL WHERE fragment and parameter list.
+"""
 def build_where_clause(selected_airport="ALL", selected_weather="all"):
     clauses = []
     params = []
@@ -69,7 +93,11 @@ def build_where_clause(selected_airport="ALL", selected_weather="all"):
 
     return where_sql, params
 
+"""Build a WHERE clause using only the airport filter.
 
+    Some dashboard sections compare weather conditions within a chosen airport,
+    so they should not also apply the weather filter from the dropdown.
+"""
 def build_airport_only_clause(selected_airport="ALL"):
     clauses = []
     params = []
@@ -84,7 +112,7 @@ def build_airport_only_clause(selected_airport="ALL"):
 
     return where_sql, params
 
-
+"""Return a sorted list of airport codes available in the merged dataset."""
 def fetch_airports(cur):
     cur.execute("SELECT DISTINCT ORIGIN FROM merged_data ORDER BY ORIGIN")
     rows = cur.fetchall()
@@ -92,6 +120,16 @@ def fetch_airports(cur):
 
 
 def fetch_kpis(cur, where_sql, params):
+    """Return top-level KPI metrics for the current filtered view."""
+    sql = f"""
+        SELECT
+            COUNT(*) AS total_flights,
+            ROUND(AVG(DEP_DELAY), 1) AS avg_delay,
+            ROUND(AVG(CANCELLED) * 100, 1) AS cancel_rate,
+            ROUND(AVG(delayed_15plus) * 100, 1) AS delay15_rate
+        FROM merged_data
+        {where_sql}
+    """
     sql = f"""
         SELECT
             COUNT(*) AS total_flights,
@@ -106,6 +144,21 @@ def fetch_kpis(cur, where_sql, params):
 
 
 def fetch_daily_trend(cur, where_sql, params):
+    """Return daily trend metrics for average delay and cancellation rate.
+
+    DATE(FL_DATE) is used consistently in both SELECT and GROUP BY to avoid
+    ONLY_FULL_GROUP_BY issues in stricter MySQL configurations.
+    """
+    sql = f"""
+        SELECT
+            DATE(FL_DATE) AS day,
+            ROUND(AVG(DEP_DELAY), 1) AS avg_delay,
+            ROUND(AVG(CANCELLED) * 100, 1) AS cancel_rate
+        FROM merged_data
+        {where_sql}
+        GROUP BY day
+        ORDER BY day
+    """
     sql = f"""
         SELECT
             DATE(FL_DATE) AS day,
@@ -137,6 +190,11 @@ def fetch_airport_comparison(cur, selected_weather="all"):
 
 
 def fetch_cause_breakdown(cur, selected_airport="ALL"):
+    """Return likely delay/cancellation causes for the selected airport scope.
+
+    This query uses UNION ALL to build a compact summary table across different
+    weather condition flags without having to reshape the data in Python.
+    """
     airport_where_sql, airport_params = build_airport_only_clause(selected_airport)
 
     sql = f"""
@@ -255,13 +313,15 @@ def fetch_cause_breakdown(cur, selected_airport="ALL"):
         WHERE affected_flights > 0
         ORDER BY avg_delay DESC
     """
-
+    # The airport filter SQL block appears six times in the UNION query, so the
+    # airport parameter list must also be repeated six times.
     params = airport_params * 6
     cur.execute(sql, params)
     return cur.fetchall()
 
 
 def fetch_airport_weather_table(cur, selected_airport="ALL"):
+    """Return a comparison table showing average delay by airport and weather type."""
     where_sql, params = build_airport_only_clause(selected_airport)
     sql = f"""
         SELECT
@@ -297,6 +357,14 @@ def to_chart_lists(rows, label_key, value_key):
 
 @app.route("/")
 def dashboard():
+    """Render the main dashboard page.
+
+     The route:
+        - reads query-string filters
+        - queries MySQL for the filtered scope
+        - prepares chart arrays
+        - passes structured results into dashboard.html
+    """
     selected_airport = request.args.get("airport", "ALL")
     selected_weather = request.args.get("weather", "all")
     if selected_weather not in WEATHER_FILTERS:
@@ -371,15 +439,18 @@ def dashboard():
 
 @app.route("/airport")
 def airport_redirect():
+    """Redirect legacy airport route usage into the main dashboard filter."""
     airport_code = request.args.get("code", "ALL")
     return redirect(url_for("dashboard", airport=airport_code))
 
 
 @app.route("/weather")
 def weather_redirect():
+    """Redirect legacy weather route usage into the main dashboard filter."""
     weather_code = request.args.get("weather", "all")
     return redirect(url_for("dashboard", weather=weather_code))
 
 
 if __name__ == "__main__":
+    # Local development server only.
     app.run(debug=True)

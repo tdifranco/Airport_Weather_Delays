@@ -261,7 +261,15 @@
                 data: airportAvgDelay
             }]
         },
-        options: commonOptions
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            offset: true
+        }
+    }
+}
     });
 
     new Chart(document.getElementById("airportCancelChart"), {
@@ -273,7 +281,15 @@
                 data: airportCancelRate
             }]
         },
-        options: commonOptions
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            offset: true
+        }
+    }
+}
     });
 
     new Chart(document.getElementById("causeDelayChart"), {
@@ -285,7 +301,15 @@
                 data: causeAvgDelay
             }]
         },
-        options: commonOptions
+        options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            offset: true
+        }
+    }
+}
     });
 
     new Chart(document.getElementById("causeVolumeChart"), {

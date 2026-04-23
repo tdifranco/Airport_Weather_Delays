@@ -1,13 +1,17 @@
 import pandas as pd
 import numpy as np
 
-INPUT_FILE = "data/raw/flight_data/df722365-5f0b-4549-b2c5-cf3d083c3ef6.csv"
-OUTPUT_FILE = "data/processed/cleaned_flights.csv"
+"""Clean and standardize raw flight data for the dashboard pipeline.
 
-TARGET_AIRPORTS = ["DFW", "ATL", "MCO", "DEN", "LAX", "SEA", "LAS", "IAD", "MDW", "JFK"]
-
-
+This script:
+1. Reads the raw flight CSV.
+2. Filters the dataset to airports in scope.
+3. Normalizes scheduled departure times into hourly timestamps.
+4. Engineers analysis-friendly fields such as delayed_15plus.
+5. Writes the cleaned result to data/processed/cleaned_flights.csv.
+""" 
 def parse_crs_dep_time(x):
+    """Convert scheduled departure time from HHMM integer format into hour and minute."""
     if pd.isna(x):
         return np.nan, np.nan
     try:

@@ -2,7 +2,12 @@ import pandas as pd
 import numpy as np
 import glob
 import os
+"""Clean and aggregate hourly airport weather files.
 
+This script reads multiple NOAA LCD weather files, standardizes the relevant
+fields, maps station IDs to airport codes, and builds a single airport-hour
+weather table for later merging with flights.
+"""
 INPUT_FOLDER = "data/raw/airport_weather_data"
 OUTPUT_FILE = "data/processed/cleaned_weather.csv"
 
@@ -20,7 +25,11 @@ AIRPORT_MAP = {
 }
 STATION_TO_AIRPORT = {v: k for k, v in AIRPORT_MAP.items()}
 
+"""Extract numeric values from mixed-format NOAA weather columns.
 
+    Handles empty values, trace precipitation, missing markers, and strings that
+    contain embedded numeric values.
+    """
 def clean_numeric(series):
     if series.dtype != "object":
         return pd.to_numeric(series, errors="coerce")
@@ -101,7 +110,7 @@ def load_and_clean_weather_file(filepath):
 
     return weather_hourly
 
-
+"""Execute the weather cleaning workflow across all selected LCD files."""
 def main():
     weather_files = glob.glob(os.path.join(INPUT_FOLDER, "LCD_*.csv"))
     all_weather = []
