@@ -303,6 +303,7 @@ These scripts generate the processed CSV files needed for database loading.
 ---
 
 ## Running with Local MySQL
+For Local MySQL it is stored in /usr/local/var/mysql and is too big of a file to commit
 
 ### 1. Load processed data into local MySQL
 
@@ -384,6 +385,47 @@ The dashboard includes:
 - likely delay-driver summary
 - weather cause breakdown table
 - airport-level weather delay summary table
+## 1. Full Dashboard Overview
+
+Shows the main dashboard with:
+- filter controls
+- KPI cards
+- trend charts
+- airport comparison charts
+
+![Dashboard Overview](docs/HomeScreen.png)
+
+---
+
+## 2. Airport-Specific View
+
+Example of the dashboard filtered to one airport.
+
+![Dashboard Airport Filter](docs/AirportFilter.png)
+
+---
+
+## 3. Weather-Specific View
+
+Example of the dashboard filtered to a weather condition.
+
+![Dashboard Weather Filter](docs/WeatherFilter.png)
+
+---
+
+## 4. Airport + Weather Example
+
+Example of a more specific filtered view.
+
+![Dashboard Atlanta Rain](docs/ATLRain.png)
+
+---
+
+## 5. Cause Breakdown Table
+
+Shows the weather-cause summary table comparing delay and cancellation rate.
+
+![Dashboard Cause Breakdown](docs/CauseBreakdown.png)
 
 ---
 

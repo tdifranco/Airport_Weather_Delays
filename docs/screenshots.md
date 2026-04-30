@@ -10,7 +10,7 @@ Shows the main dashboard with:
 - trend charts
 - airport comparison charts
 
-![Dashboard Overview](./HomeScreen.png)
+![Dashboard Overview](docs/HomeScreen.png)
 
 ---
 
@@ -18,7 +18,7 @@ Shows the main dashboard with:
 
 Example of the dashboard filtered to one airport.
 
-![Dashboard Airport Filter](./AirportFilter.png)
+![Dashboard Airport Filter](docs/AirportFilter.png)
 
 ---
 
@@ -26,7 +26,7 @@ Example of the dashboard filtered to one airport.
 
 Example of the dashboard filtered to a weather condition.
 
-![Dashboard Weather Filter](./WeatherFilter.png)
+![Dashboard Weather Filter](docs/WeatherFilter.png)
 
 ---
 
@@ -34,7 +34,7 @@ Example of the dashboard filtered to a weather condition.
 
 Example of a more specific filtered view.
 
-![Dashboard Atlanta Rain](./ATLRain.png)
+![Dashboard Atlanta Rain](docs/ATLRain.png)
 
 ---
 
@@ -42,4 +42,4 @@ Example of a more specific filtered view.
 
 Shows the weather-cause summary table comparing delay and cancellation rate.
 
-![Dashboard Cause Breakdown](./CauseBreakdown.png)
+![Dashboard Cause Breakdown](docs/CauseBreakdown.png)
